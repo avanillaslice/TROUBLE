@@ -31,3 +31,5 @@ Currently investigating methods to generate the board
 			-Could do it manually.. Or I could just list the locations of the top left pixel for each space and have a loop apply the properties to the other 7
 				-Added list of places in 'places.js'
 				-Added loop to apply basic colour to surrounding pixels.
+	-Pixel Display
+		-Created loop that concats chalk colours with each of the pixels colour

@@ -24,7 +24,7 @@ function pixelGen(){
 	var pixels = [];
 
 	function storeCoordinate(cVal, rVal, array){
-		array.push({c: cVal, r: rVal, colour: ''});
+		array.push({c: cVal, r: rVal, colour: '', char: 'o'});
 	}
 
 	for (let r = 0; r < rows; r++) {
@@ -33,7 +33,6 @@ function pixelGen(){
 		}	
 	}
 
-	var count = 0
 	places.forEach(a => {
 		var match = pixels.findIndex(p => {
 			return p.c == a.c && p.r == a.r
@@ -51,8 +50,40 @@ function pixelGen(){
 			pixels[match+i].colour = a.colour
 		}
 	})
-
-	console.log(pixels)
+	var loops = 0
+	var output = ''
+	for (let i = 0; i < pixels.length; i++){
+		var c
+		switch (pixels[i].colour) {
+			case 'red':
+				c = chalk.red(pixels[i].char);
+				break;
+			case 'blue':
+				c = chalk.blue(pixels[i].char);
+				break;
+			case 'white':
+				c = chalk.white(pixels[i].char);
+				break;
+			case 'green':
+				c = chalk.green(pixels[i].char);
+				break;
+			case 'yellow':
+				c = chalk.yellow(pixels[i].char);
+				break;
+			default:
+				c = chalk.grey(pixels[i].char);
+		}
+		output += c
+		loops++
+		if (loops == 76) {
+			console.log(output)
+			output = ''
+			loops = 0
+		}
+	}
+	console.log(loops)
+	// const wordywords = chalk.blue('ooooooo')
+	// console.log("ooooooooooooo" + wordywords)
 }
 
 function displayGame(){
