@@ -5,6 +5,8 @@ import chalk from 'chalk';
 import gradient from 'gradient-string';
 import chalkAnimation from 'chalk-animation';
 import {places} from './places.js';
+import {pieces} from './pieces.js';
+var pixels = [];
 
 function askQuestion(query) {
 	const rl = readline.createInterface({
@@ -18,22 +20,26 @@ function askQuestion(query) {
 	}))
 }
 
+///GENERATES INITAL BLANK PIXELS///
 function pixelGen(){
 	const rows = 34;
 	const columns = 76;
-	var pixels = []
 
 	for (let r = 0; r < rows; r++) {
 		for (let c = 0; c < columns; c++) {
-			pixels.push({c: c, r: r, colour: '', char: ' ', type:''});
+			pixels.push({c: c, r: r, colour: '', char: ' ', type:'', piece:''});
 		}	
 	}
+}
 
+///APPLIES PROPERTIES OF PLAYABLE SPACES ONTO PIXELS///
+function updatePixels() {
 	function applyProperties(pixel, place, array){
 		for (let i = 0; i < 4; i++){
 			pixels[pixel+i].colour = place.colour
 			pixels[pixel+i].type = place.type
 			if (place.type =='home'){
+					pixels[pixel+i].piece = place.colour
 					pixels[pixel+i].char = '\u256C'
 			} else if (place.type == 'final'){
 				pixels[pixel+i].char = '\u2573'
@@ -41,7 +47,7 @@ function pixelGen(){
 			array.push(pixels[pixel+i])
 		}
 	}
-
+	///FINDS THE MATCHING PIXELS FOR THE PLAYABLE SPACES///
 	var playablePlaces = []
 	places.forEach(a => {
 		var playablePixelSet = []
@@ -58,10 +64,11 @@ function pixelGen(){
 
 		playablePlaces.push(playablePixelSet)
 	})
+}
 
-	console.log(playablePlaces.length)
-	
-
+///DISPLAYS BOARD///
+function refreshBoard() {
+		///PIXEL DISPLAY///
 	var loops = 0
 	var output = ''
 	for (let i = 0; i < pixels.length; i++){
@@ -93,12 +100,28 @@ function pixelGen(){
 			loops = 0
 		}
 	}
-	// const wordywords = chalk.blue('ooooooo')
-	// console.log("ooooooooooooo" + wordywords)
 }
 
-function displayGame(){
+async function start(){
+	function move(){
+		pieces[0].pos = 1
+		pieces[0].state = ''
+		updatePixels();
+		refreshBoard()
+		console.log(pieces[0])
+	}
+
+	const ans = await askQuestion("1. Move\n")
+	console.clear()
+
+	ans == 1 ? move() : console.log('invalid input')
+}
+
+function playGame(){
 	pixelGen()
+	updatePixels()
+	refreshBoard()
+	start()
 }
 
 function showPlayers(){
@@ -108,6 +131,6 @@ function showPlayers(){
 const ans = await askQuestion("1. Play Game\n2. View Players\n")
 console.clear();
 
-ans == 1 ? displayGame() 
+ans == 1 ? playGame() 
 : ans == 2 ? showPlayers()
 : console.log('Invalid Input')

@@ -41,3 +41,12 @@ Currently investigating methods to generate the board
 			-Modified pixelGen() to apply places.js properties to pixels
 		 		-Moved property application process into applyProperties() to minimise repetition
 		-Added 'pos' property to places.js to determine direction of movement
+
+Updating Board
+	-Will start by trying to move a piece around the board
+		-I'll need to make a movement function
+			-Pieces need references
+				-Added 'pieces.js' which includes colour, position, and state(home/neutral/final)
+			-On move, change piece status, refresh board
+		-Refactoring will be needed to avoid repetition
+			-applyProperties() can be adjusted to be updateProperties()
