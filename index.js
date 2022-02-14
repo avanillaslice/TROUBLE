@@ -21,57 +21,69 @@ function askQuestion(query) {
 function pixelGen(){
 	const rows = 34;
 	const columns = 76;
-	var pixels = [];
-
-	function storeCoordinate(cVal, rVal, array){
-		array.push({c: cVal, r: rVal, colour: '', char: 'o'});
-	}
+	var pixels = []
 
 	for (let r = 0; r < rows; r++) {
 		for (let c = 0; c < columns; c++) {
-			storeCoordinate(c, r, pixels)
+			pixels.push({c: c, r: r, colour: '', char: ' ', type:''});
 		}	
 	}
 
+	function applyProperties(pixel, place, array){
+		for (let i = 0; i < 4; i++){
+			pixels[pixel+i].colour = place.colour
+			pixels[pixel+i].type = place.type
+			if (place.type =='home'){
+					pixels[pixel+i].char = '\u256C'
+			} else if (place.type == 'final'){
+				pixels[pixel+i].char = '\u2573'
+			}
+			array.push(pixels[pixel+i])
+		}
+	}
+
+	var playablePlaces = []
 	places.forEach(a => {
+		var playablePixelSet = []
+		
 		var match = pixels.findIndex(p => {
 			return p.c == a.c && p.r == a.r
 		})
-
-		for (let i = 0; i < 4; i++){
-			pixels[match+i].colour = a.colour
-		}
+		applyProperties(match, a, playablePixelSet)
 
 		var match = pixels.findIndex(p => {
 			return p.c == a.c && p.r == a.r + 1
 		})
+		applyProperties(match, a, playablePixelSet)
 
-		for (let i = 0; i < 4; i++){
-			pixels[match+i].colour = a.colour
-		}
+		playablePlaces.push(playablePixelSet)
 	})
+
+	console.log(playablePlaces.length)
+	
+
 	var loops = 0
 	var output = ''
 	for (let i = 0; i < pixels.length; i++){
 		var c
 		switch (pixels[i].colour) {
 			case 'red':
-				c = chalk.red(pixels[i].char);
+				c = chalk.bgRgb(153, 0, 0).red.bold(pixels[i].char);
 				break;
 			case 'blue':
-				c = chalk.blue(pixels[i].char);
+				c = chalk.bgBlue.black(pixels[i].char);
 				break;
 			case 'white':
-				c = chalk.white(pixels[i].char);
+				c = chalk.bgRgb(135, 135, 135).red.bold(pixels[i].char);
 				break;
 			case 'green':
-				c = chalk.green(pixels[i].char);
+				c = chalk.bgGreen.black(pixels[i].char);
 				break;
 			case 'yellow':
-				c = chalk.yellow(pixels[i].char);
+				c = chalk.bgYellow.black(pixels[i].char);
 				break;
 			default:
-				c = chalk.grey(pixels[i].char);
+				c = chalk.rgb(0,0,0)(pixels[i].char);
 		}
 		output += c
 		loops++
@@ -81,14 +93,12 @@ function pixelGen(){
 			loops = 0
 		}
 	}
-	console.log(loops)
 	// const wordywords = chalk.blue('ooooooo')
 	// console.log("ooooooooooooo" + wordywords)
 }
 
 function displayGame(){
 	pixelGen()
-
 }
 
 function showPlayers(){
@@ -96,7 +106,7 @@ function showPlayers(){
 }
 
 const ans = await askQuestion("1. Play Game\n2. View Players\n")
-// console.clear();
+console.clear();
 
 ans == 1 ? displayGame() 
 : ans == 2 ? showPlayers()

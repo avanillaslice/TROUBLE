@@ -29,7 +29,15 @@ Currently investigating methods to generate the board
 	-Generate the array of blank pixels -> apply properties of playable spaces -> LOOP: if not playable - concat a blank "o", if playable - concat relevant character/colour
 		-Just now realising I'll need to figure out a way to adjust the properties of 480 pixels (8 pixels x 60 spaces)...
 			-Could do it manually.. Or I could just list the locations of the top left pixel for each space and have a loop apply the properties to the other 7
-				-Added list of places in 'places.js'
+				-Added list of playable places in 'places.js'
 				-Added loop to apply basic colour to surrounding pixels.
 	-Pixel Display
-		-Created loop that concats chalk colours with each of the pixels colour
+		-Created loop that concats chalk colours relative to the pixels colour
+		-Determining colours/characters that best present the places and pieces...
+	-Pixel Sets
+		-When assigning properties of playable spaces to blank pixels I should group them into sets to reference later. Ordering them in a clockwise fashion.
+		-Home spaces and final runs should have their own sets
+			-Added "type" to 'places.js' to define home/final/neutral
+			-Modified pixelGen() to apply places.js properties to pixels
+		 		-Moved property application process into applyProperties() to minimise repetition
+		-Added 'pos' property to places.js to determine direction of movement
