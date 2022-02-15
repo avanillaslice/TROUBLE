@@ -47,6 +47,9 @@ Updating Board
 		-I'll need to make a movement function
 			-Pieces need references
 				-Added 'pieces.js' which includes colour, position, and state(home/neutral/final)
+				-pieces.js will need to apply to places before the pixels are updated
+					-places needs 'occupied' property
+					-Created updatePlaces()
 			-On move, change piece status, refresh board
 		-Refactoring will be needed to avoid repetition
 			-applyProperties() can be adjusted to be updateProperties()
