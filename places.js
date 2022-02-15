@@ -24,7 +24,7 @@ var places = [
 	{c: 68, r: 10, colour: 'blue', type:'', pos: 9, occupied: ''},
 	{c: 27, r: 11, colour: 'red', type:'final', pos: 3, occupied: ''},
 	{c: 45, r: 11, colour: 'blue', type:'final', pos: 3, occupied: ''},
-	{c: 4, r: 13, colour: 'white', type:'', pos: 25, occupied: ''},
+	{c: 4, r: 13, colour: 'white', type:'', pos: 26, occupied: ''},
 	{c: 32, r: 13, colour: 'red', type:'final', pos: 4, occupied: ''},
 	{c: 40, r: 13, colour: 'blue', type:'final', pos: 4, occupied: ''},
 	{c: 68, r: 13, colour: 'white', type:'', pos: 10, occupied: ''},

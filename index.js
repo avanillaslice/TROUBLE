@@ -35,7 +35,7 @@ function pixelGen(){
 
 ///APPLIES PROPERTIES OF PLAYABLE SPACES ONTO PIXELS///
 function updatePixels() {
-	function applyProperties(pixel, place, array){
+	function applyProperties(pixel, place){
 		for (let i = 0; i < 4; i++){
 			pixels[pixel+i].bgColour = place.colour
 			pixels[pixel+i].colour = place.occupied
@@ -46,29 +46,22 @@ function updatePixels() {
 			}
 			
 			if (place.type == 'final'){
-				pixels[pixel+i].char = '\u2573'
+				pixels[pixel+i].char = ' '
 			}
-
-			array.push(pixels[pixel+i])
 		}
 	}
 
 	///FINDS THE MATCHING PIXELS FOR THE PLAYABLE SPACES///
-	
 	places.forEach(a => {
-		var playablePixelSet = []
-		
 		var match = pixels.findIndex(p => {
 			return p.c == a.c && p.r == a.r
 		})
-		applyProperties(match, a, playablePixelSet)
+		applyProperties(match, a)
 
 		var match = pixels.findIndex(p => {
 			return p.c == a.c && p.r == a.r + 1
 		})
-		applyProperties(match, a, playablePixelSet)
-
-		playablePlaces.push(playablePixelSet)
+		applyProperties(match, a)
 	})
 }
 
@@ -142,59 +135,153 @@ function refreshBoard() {
 	}
 }
 
-async function start(){
-	
+async function start() {
+	var players = ['red', 'blue', 'yellow', 'green']
+	var turn = 0
+	var activePlayer, finished, roll, playerPieces, startPos, newPos, unableToMove, captured, capturedPieces, rollover
 
-	const ans = await askQuestion("1. Move\n")
-	console.clear()
-
-	//player red rolls a 6 and chooses piece 1
-	var activePlayer = 'red'
-	var roll = 6
-	var choice = 1
-	var startPos
-	switch (activePlayer){
-		case 'red':
-			startPos = 10
-			break;
-		case 'blue':
-			startPos = 18
-			break;
-		case 'yellow':
-			startPos = 49
-			break;
-		case 'green':
-			startPos = 41
-			break;
+	function setStartPos() {
+		switch (activePlayer){
+			case 'red':
+				startPos = 1
+				break;
+			case 'blue':
+				startPos = 8
+				break;
+			case 'yellow':
+				startPos = 15
+				break;
+			case 'green':
+				startPos = 22
+				break;
+		}
 	}
 
-	if (roll = 6) {
-		//pick a piece to move (assuming piece 1)
-		var piece = pieces.findIndex(a => a.num == choice && a.colour == activePlayer)
-		var place = places.findIndex(a => a.type == pieces[piece].state && a.pos == pieces[piece].pos && a.occupied == activePlayer)
-		//if piece 1 state = home
-			//move piece to active players startPos (pos 1)
-			//set current place to unoccupied and position 1 to occupied and piece state to ''
-			
+	function checkPieces(player) { //POTENTIALLY CHECKS ALL STATES AND RETURNS PROFILE OF ALL PIECES TO BE REFERRED TO THROUGHOUT TURN
+		var homePieces = pieces.filter(a => a.state == 'home' && a.colour == player)
+		var boardPieces = pieces.filter(a => a.state == '' && a.colour == player)
+		var finalPieces = pieces.filter(a => a.state == 'final' && a.colour == player)
+		var startPieces = pieces.find(a => a.pos == startPos && a.state == '')
+		return [homePieces, boardPieces, finalPieces, startPieces]
+	}
+
+	function checkPlace(pos, type, colour) {
+		if (type == 'final') {
+			if (places.find(a => a.pos == pos && a.type == type && a.colour == colour).occupied == '') {
+				return true
+			}
+		} else if (places.find(a => a.pos == pos && a.type == type).occupied == '') {
+			return true
+		}
+	}
+
+	function leaveHome(homePiece) {
+			var piece = pieces.findIndex(a => a.num == homePiece.num && a.colour == activePlayer)
+			var place = places.findIndex(a => a.pos == homePiece.num && a.colour == activePlayer && a.type == 'home')
+			var newPlace = places.findIndex(a => a.pos == startPos && a.type == '')
 			pieces[piece].state = ''
-			pieces[piece].pos = 1
+			pieces[piece].pos = places[newPlace].pos
 			places[place].occupied = ''
-			places[startPos].occupied = activePlayer
-
-			updatePixels()
-			refreshBoard()
-		
-	} else if (roll < 6) {
-		console.log("lower than 6")//does active player have any pieces outside of home?
+			places[newPlace].occupied = activePlayer
 	}
 
-	// ans == 1 ? move() : console.log('invalid input')
+	function movePiece(stdPiece) {
+		var piece = pieces.findIndex(a => a.num == stdPiece.num && a.colour == activePlayer)
+		var place = places.findIndex(a => a.pos == stdPiece.pos && a.type == '')
+		var newPlace = places.findIndex(a => a.pos == newPos && a.type == '')
+		//
+
+		if (rollover == true) {
+			capturedPieces = pieces.filter(a => a.state == '' && a.pos > pieces[piece].pos && a.pos <= 28)
+			capturedPieces.concat(pieces.filter(a => a.state == '' && a.pos >= 1 && a.pos < places[newPlace].pos))
+		} else {
+			capturedPieces = pieces.filter(a => a.state == '' && a.pos > pieces[piece].pos && a.pos < places[newPlace].pos)
+		}
+		
+		pieces[piece].pos = places[newPlace].pos
+		places[place].occupied = ''
+		places[newPlace].occupied = activePlayer
+
+		capturedPieces.length > 0 ? returnPieces(capturedPieces) : captured = false
+	}
+
+	function returnPieces(stdPieces){
+		captured = stdPieces.filter(a => a.colour != activePlayer)
+		console.log("TO BE SENT HOME:")
+		captured.forEach(a => {
+			
+			console.log(a)
+			var piece = pieces.findIndex(b => b.num == a.num && b.colour == a.colour)
+			var place = places.findIndex(b => b.pos == a.pos && b.type == a.state)
+			var newPlace = places.findIndex(b => b.colour == a.colour && b.pos == a.num && b.type == 'home')
+
+			pieces[piece].pos = places[newPlace].pos
+			pieces[piece].state = 'home'
+			places[place].occupied = ''
+			places[newPlace].occupied = pieces[piece].colour
+
+			console.log(a.colour + 's' + ' piece ' + a.num + ' was sent home by ' + activePlayer + '!')
+		})
+		console.log('ALL CAPUTRES:')
+		console.log(stdPieces)
+		console.log('HOME PIECES:')
+		console.log(pieces.filter(a => a.state == 'home'))
+	}
+
+	do {
+		if (turn == 4) turn = 0
+		activePlayer = players[turn]
+		unableToMove = false
+		captured = false
+		rollover = false
+		setStartPos()
+	
+		roll = Math.floor(Math.random() * 6) + 1;
+
+		playerPieces = checkPieces(activePlayer)
+
+		if (playerPieces[0].length > 0 && roll == 6 && checkPlace(startPos, '', activePlayer)) { //IF PLAYER HAS AT LEAST ONE HOME PIECE
+				leaveHome(playerPieces[0][0])
+		} else if (playerPieces[1].length > 0) { //IF PLAYER HAS AT LEAST ONE PIECE ON THE BOARD (NOT INCLUDING FINAL STRETCH)
+			if (playerPieces[3] != null && playerPieces[3].colour == activePlayer) {
+				newPos = playerPieces[3].pos + roll
+				if (checkPlace(newPos, '', activePlayer)) {
+					movePiece(playerPieces[3])
+				}
+			} else {
+				for (let i = 0; i < playerPieces[1].length; i++){
+					newPos = playerPieces[1][i].pos + roll
+					if (newPos > 28) {
+						newPos -= 28
+						rollover = true
+					}
+					if (checkPlace(newPos, '', activePlayer)) {
+						movePiece(playerPieces[1][i])
+						break;
+					}
+				}
+			}
+		} else {
+			unableToMove = true
+		}
+
+		updatePixels()
+		refreshBoard()
+		console.log(activePlayer + ' rolled a '+ roll)
+		if (captured == true) {console.log ('CAPTURED DETAILS HERE')}
+		if (unableToMove) console.log(activePlayer + ' is unable to move...')
+
+		// console.log('BOARD PIECES:')
+		// console.log(pieces.filter(a => a.state == ''))
+
+		await askQuestion("Press Enter to Continue")
+
+		turn++
+	} while (finished != 1)
 }
 
 function playGame(){
 	pixelGen()
-	updatePixels()
-	refreshBoard()
 	start()
 }
 

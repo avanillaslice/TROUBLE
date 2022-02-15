@@ -53,3 +53,18 @@ Updating Board
 			-On move, change piece status, refresh board
 		-Refactoring will be needed to avoid repetition
 			-applyProperties() can be adjusted to be updateProperties()
+	-Created basic movement function for inital move
+
+Game logic
+	-Setting loop to go through each player until winning parameters are met
+	-Optimal play probably prioritises ensuring no pieces are on your start place and using your 6's to release your pieces whenever possible. Although that would also set you up to have more pieces sent home... Potentially some middle ground there.
+		-Each move starts with dice roll
+		-Check if all pieces are in home
+			-If rolled a 6 place it at start
+			-Else check for pieces on board and move then
+			-Else end turn
+	-Refactoring necessary to fascilitate all possibilities and minimise repetition. Ironically I keep repeating that last part.
+	-Check for pieces capturing others...
+		-As long as it's not the activePlayers piece, send to movePiece()
+			-Ahh too much refactoring for minimal gain, I'll make a seperate returnPieces()
+		 	
