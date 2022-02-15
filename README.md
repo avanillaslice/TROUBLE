@@ -67,4 +67,13 @@ Game logic
 	-Check for pieces capturing others...
 		-As long as it's not the activePlayers piece, send to movePiece()
 			-Ahh too much refactoring for minimal gain, I'll make a seperate returnPieces()
+
+TODO:
+IF DONE LOOP, GO FOR FINAL
+IF ALL FOUR IN FINAL DECLARE WINNER
+REPORTING OF WINNER
+FIX UP CHARACTERS/COLOURS
+REMOVE REDUNDANT CODE
+CLEAR CONSOLE ON REFRESH
+README ON OPERATION
 		 	

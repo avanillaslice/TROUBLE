@@ -138,7 +138,7 @@ function refreshBoard() {
 async function start() {
 	var players = ['red', 'blue', 'yellow', 'green']
 	var turn = 0
-	var activePlayer, finished, roll, playerPieces, startPos, newPos, unableToMove, captured, capturedPieces, rollover
+	var activePlayer, finished, roll, playerPieces, startPos, newPos, unableToMove, captured, capturedPieces, rollover, choice
 
 	function setStartPos() {
 		switch (activePlayer){
@@ -176,6 +176,7 @@ async function start() {
 	}
 
 	function leaveHome(homePiece) {
+			choice = homePiece.num
 			var piece = pieces.findIndex(a => a.num == homePiece.num && a.colour == activePlayer)
 			var place = places.findIndex(a => a.pos == homePiece.num && a.colour == activePlayer && a.type == 'home')
 			var newPlace = places.findIndex(a => a.pos == startPos && a.type == '')
@@ -186,6 +187,7 @@ async function start() {
 	}
 
 	function movePiece(stdPiece) {
+		choice = stdPiece.num
 		var piece = pieces.findIndex(a => a.num == stdPiece.num && a.colour == activePlayer)
 		var place = places.findIndex(a => a.pos == stdPiece.pos && a.type == '')
 		var newPlace = places.findIndex(a => a.pos == newPos && a.type == '')
@@ -206,11 +208,9 @@ async function start() {
 	}
 
 	function returnPieces(stdPieces){
-		captured = stdPieces.filter(a => a.colour != activePlayer)
-		console.log("TO BE SENT HOME:")
-		captured.forEach(a => {
-			
-			console.log(a)
+		captured = true
+		capturedPieces = stdPieces.filter(a => a.colour != activePlayer)
+		capturedPieces.forEach(a => {
 			var piece = pieces.findIndex(b => b.num == a.num && b.colour == a.colour)
 			var place = places.findIndex(b => b.pos == a.pos && b.type == a.state)
 			var newPlace = places.findIndex(b => b.colour == a.colour && b.pos == a.num && b.type == 'home')
@@ -219,13 +219,46 @@ async function start() {
 			pieces[piece].state = 'home'
 			places[place].occupied = ''
 			places[newPlace].occupied = pieces[piece].colour
-
-			console.log(a.colour + 's' + ' piece ' + a.num + ' was sent home by ' + activePlayer + '!')
 		})
-		console.log('ALL CAPUTRES:')
-		console.log(stdPieces)
-		console.log('HOME PIECES:')
-		console.log(pieces.filter(a => a.state == 'home'))
+	}
+
+	function report() {
+		var name, place, playerName
+
+		function numToWord(number) {
+			switch (number) {
+				case 1 : return 'first'; break;
+				case 2 : return 'second'; break;
+				case 3 : return 'third'; break;
+				case 4 : return 'fourth'; break;
+			}
+		}
+
+		switch (activePlayer) {
+			case 'red' : playerName = chalk.red('Red'); break;
+			case 'blue' : playerName = chalk.blue('Blue'); break;
+			case 'yellow' : playerName = chalk.yellow('Yellow') ; break;
+			case 'green' : playerName = chalk.green('Green'); break;
+		}
+
+		console.log(playerName + ' has rolled a ' + roll)
+
+		if (captured == true) {
+			capturedPieces.forEach(a => {
+				switch (a.colour) {
+					case 'red' : name = chalk.red('Reds'); break;
+					case 'blue' : name = chalk.blue('Blues'); break;
+					case 'yellow' : name = chalk.yellow('Yellows') ; break;
+					case 'green' : name = chalk.green('Greens'); break;
+				}
+			console.log(numToWord(a.num) + ' ' + place + ' piece was sent home by ' + playerName + '!')
+			})
+		}
+		if (unableToMove) {
+			console.log(playerName + ' is unable to move...')
+		} else {
+			console.log(playerName + ' moved their ' + numToWord(choice) + ' piece')
+		}
 	}
 
 	do {
@@ -267,12 +300,7 @@ async function start() {
 
 		updatePixels()
 		refreshBoard()
-		console.log(activePlayer + ' rolled a '+ roll)
-		if (captured == true) {console.log ('CAPTURED DETAILS HERE')}
-		if (unableToMove) console.log(activePlayer + ' is unable to move...')
-
-		// console.log('BOARD PIECES:')
-		// console.log(pieces.filter(a => a.state == ''))
+		report()
 
 		await askQuestion("Press Enter to Continue")
 
