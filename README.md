@@ -67,6 +67,11 @@ Game logic
 	-Check for pieces capturing others...
 		-As long as it's not the activePlayers piece, send to movePiece()
 			-Ahh too much refactoring for minimal gain, I'll make a seperate returnPieces()
+	-If done a loop, enter final zone
+		-Will add a 'distance' parameter to each piece
+		 	-0 by default, set to 1 when leaveHome(), from there just adding the roll to it after successfully moving.
+			-Reset if sent home
+			-When chosing place to move to, if distance is higher than... 28? Minus 28 from distance and check that position in final area, if not availiable, look for another piece.
 
 TODO:
 IF DONE LOOP, GO FOR FINAL
@@ -76,4 +81,3 @@ FIX UP CHARACTERS/COLOURS
 REMOVE REDUNDANT CODE
 CLEAR CONSOLE ON REFRESH
 README ON OPERATION
-		 	
