@@ -74,5 +74,7 @@ Game logic
 			-When chosing place to move to, if distance is higher than... 28? Minus 28 from distance and check that position in final area, if not availiable, look for another piece.
 
 TODO:
+REMOVE UNUSED NPM MODULES
 REMOVE REDUNDANT CODE
 README ON OPERATION
+SENT HOME REPORTING UNDEFINED COLOUR
