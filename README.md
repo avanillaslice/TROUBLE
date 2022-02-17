@@ -74,10 +74,5 @@ Game logic
 			-When chosing place to move to, if distance is higher than... 28? Minus 28 from distance and check that position in final area, if not availiable, look for another piece.
 
 TODO:
-IF DONE LOOP, GO FOR FINAL
-IF ALL FOUR IN FINAL DECLARE WINNER
-REPORTING OF WINNER
-FIX UP CHARACTERS/COLOURS
 REMOVE REDUNDANT CODE
-CLEAR CONSOLE ON REFRESH
 README ON OPERATION

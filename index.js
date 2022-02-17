@@ -6,8 +6,28 @@ import gradient from 'gradient-string';
 import chalkAnimation from 'chalk-animation';
 import {places} from './places.js';
 import {pieces} from './pieces.js';
+import {names} from './names.js';
+
 var pixels = [];
-var playablePlaces = []
+var playerNames = [];
+
+for (let i = 0; i < 4; i++) {
+	var rndmName = names[Math.floor(Math.random() * 19)]
+
+	if (playerNames.find(a => a == rndmName) != null) {
+		i--
+	} else {
+	playerNames[i] = {name: rndmName, wins: 0}
+	}
+}
+
+async function menu(option) {
+	const ans = await askQuestion("1. Play Game\n2. View Players\n")
+
+		ans == 1 ? playGame() 
+		: ans == 2 ? showPlayers()
+		: menu()
+}
 
 function askQuestion(query) {
 	const rl = readline.createInterface({
@@ -23,6 +43,7 @@ function askQuestion(query) {
 
 ///GENERATES INITAL BLANK PIXELS///
 function pixelGen(){
+	pixels = [];
 	const rows = 34;
 	const columns = 76;
 
@@ -134,21 +155,36 @@ function refreshBoard() {
 async function start() {
 	var players = ['red', 'blue', 'yellow', 'green']
 	var turn = 0
-	var activePlayer, finished, roll, playerPieces, startPos, newPos, endPos, unableToMove, captured, capturedPieces, rollover, choice, distance, playerName
+	var activePlayer, finished, roll, playerPieces, startPos, newPos, endPos, unableToMove, captured, capturedPieces, rollover, choice, playerName
 
-	function setStartPos() {
+	function resetGame() {
+		pieces.forEach(a => {
+			a.pos = a.num;
+			a.state = 'home'
+			a.distance = 0
+		})
+		places.forEach(a => {
+			a.type == 'home' ? a.occupied = a.colour : a.occupied = ''
+		})
+	}
+
+	function setPlayer() {
 		switch (activePlayer){
 			case 'red':
 				startPos = 1
+				playerName = chalk.red(playerNames[0].name)
 				break;
 			case 'blue':
 				startPos = 8
+				playerName = chalk.blue(playerNames[1].name)
 				break;
 			case 'yellow':
 				startPos = 15
+				playerName = chalk.yellow(playerNames[2].name)
 				break;
 			case 'green':
 				startPos = 22
+				playerName = chalk.green(playerNames[3].name)
 				break;
 		}
 	}
@@ -232,18 +268,11 @@ async function start() {
 
 		function numToWord(number) {
 			switch (number) {
-				case 1 : return 'first'; break;
-				case 2 : return 'second'; break;
-				case 3 : return 'third'; break;
-				case 4 : return 'fourth'; break;
+				case 1 : return 'first';
+				case 2 : return 'second';
+				case 3 : return 'third';
+				case 4 : return 'fourth';
 			}
-		}
-
-		switch (activePlayer) {
-			case 'red' : playerName = chalk.red('Red'); break;
-			case 'blue' : playerName = chalk.blue('Blue'); break;
-			case 'yellow' : playerName = chalk.yellow('Yellow') ; break;
-			case 'green' : playerName = chalk.green('Green'); break;
 		}
 
 		console.log(playerName + ' has rolled a ' + roll)
@@ -270,8 +299,12 @@ async function start() {
 		var finishedPieces = pieces.filter(a => a.colour == activePlayer && a.state == 'final')
 		if (finishedPieces != null && finishedPieces.length == 4) {
 			finished = 1
+			playerNames[turn].wins++
 		}
 	}
+
+	resetGame()
+	pixelGen()
 
 	do {
 		turn++
@@ -280,7 +313,7 @@ async function start() {
 		unableToMove = true
 		captured = false
 		rollover = false
-		setStartPos()
+		setPlayer()
 	
 		roll = Math.floor(Math.random() * 6) + 1;
 
@@ -336,20 +369,21 @@ async function start() {
 	} while (finished != 1)
 
 	console.log(playerName + ' has won the game!')
+	menu(1)
 }
 
 function playGame(){
-	pixelGen()
 	start()
 }
 
 function showPlayers(){
-	console.log('ShowPlayers')
+	console.clear()
+	console.log('Current Players:')
+	for (let i = 0; i < 4; i++) {
+		console.log(playerNames[i].name + ' - Wins: ' + playerNames[i].wins)
+	}
+	console.log()
+	menu()
 }
 
-const ans = await askQuestion("1. Play Game\n2. View Players\n")
-console.clear();
-
-ans == 1 ? playGame() 
-: ans == 2 ? showPlayers()
-: console.log('Invalid Input')
+menu()
