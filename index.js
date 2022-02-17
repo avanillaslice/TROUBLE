@@ -16,8 +16,6 @@
 
 import readline from 'readline';
 import chalk from 'chalk';
-import gradient from 'gradient-string';
-import chalkAnimation from 'chalk-animation';
 import {places} from './places.js'; //THESE ARE THE LOCATIONS OF THE TOP LEFT 
 import {pieces} from './pieces.js';
 import {names} from './names.js';

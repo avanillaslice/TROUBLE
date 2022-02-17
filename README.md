@@ -1,4 +1,4 @@
-# TROUBLE
+TROUBLE
 Developer Project for UseVerb
 
 Installation
