@@ -4,7 +4,9 @@ Developer Project for UseVerb
 Installation
 
 Open up a terminal at your preferred location
+
 run: git clone https://github.com/avanillaslice/TROUBLE && cd avanillaslice/TROUBLE
+
 then run npm i
 
 
@@ -104,7 +106,3 @@ Game logic
 		 	-0 by default, set to 1 when leaveHome(), from there just adding the roll to it after successfully moving.
 			-Reset if sent home
 			-When chosing place to move to, if distance is higher than... 28? Minus 28 from distance and check that position in final area, if not availiable, look for another piece.
-
-TODO:
-REMOVE UNUSED NPM MODULES
-SENT HOME REPORTING UNDEFINED COLOUR
