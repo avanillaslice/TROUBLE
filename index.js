@@ -303,7 +303,7 @@ async function start() {
 					case 'yellow' : name = chalk.yellow('Yellows') ; break;
 					case 'green' : name = chalk.green('Greens'); break;
 				}
-			console.log(numToWord(a.num) + ' ' + place + ' piece was sent home by ' + playerName + '!')
+			console.log(name + ' ' + numToWord(a.num) + ' piece was sent home by ' + playerName + '!')
 			})
 		}
 		if (unableToMove) {

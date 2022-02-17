@@ -1,8 +1,40 @@
 # TROUBLE
- Developer Project for UseVerb
+Developer Project for UseVerb
+
+Installation
+
+Open up a terminal at your preferred location
+run: git clone https://github.com/avanillaslice/TROUBLE && cd avanillaslice/TROUBLE
+then run npm i
 
 
-PROCESS
+Usage
+
+After installing, you can run the program with npm start
+
+
+
+DEVELOPMENT PROCESS
+
+This was an interesting project. It's sounding like it was more focused on the back-end and the UI wasn't necessary but I appreciated the challenge.
+The biggest issues I had were:
+- Determining the best way to structure the board on a CLI. It took a while to figure out that it would be easier to create a large grid of and then
+use photoshop to overlay pieces. Moving them around until it looked right. The actual grouping of pixels and property assignment was more time consuming
+than complicated.
+- Updating the properties of the pieces and places took the most effort. Confusing index references with property rich objects got me snagged quite a few
+times. Although once I started getting into the habit of console.logging my intentions before the functions were called things became much more fluid. The
+rollover from the 28th place to the 1st served as a suitable corner to repeatedly kick my toe on. Mostly because there were multiple things that used the
+pieces current position in relation to it's next one.
+- Determining the right gameplay priorities. And then implementing them in a way that didn't cause the player to move two pieces, or end up not attempting
+to move at all was another time sink. I ended up settling on multi-conditional if statements.
+- Developing general purpose movement functions. I really wanted to have a central function that would accept all movement intentions. Whether it be moving
+a piece out of the home area, across the board, sending them home if captured, and into the final area. I think it was an lack of foresight that made me
+code myself into a corner, where the time/effort cost of refactoring the existing code was greater than just making seperate functions for each.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+The content below is me talking myself through issues or noting changes as I went. As I moved deeper into the game logic I found myself reporting less as it 
+was more about refactoring existing code and shifting things in a way that's difficult to consistently type out.
 
 Decided on a few modules to decorate console text
 Created initial menu
@@ -75,6 +107,4 @@ Game logic
 
 TODO:
 REMOVE UNUSED NPM MODULES
-REMOVE REDUNDANT CODE
-README ON OPERATION
 SENT HOME REPORTING UNDEFINED COLOUR
