@@ -20,7 +20,7 @@ DEVELOPMENT PROCESS
 
 This was an interesting project. It's sounding like it was more focused on the back-end and the UI wasn't necessary but I appreciated the challenge.
 The biggest issues I had were:
-- Determining the best way to structure the board on a CLI. It took a while to figure out that it would be easier to create a large grid of and then
+- Determining the best way to structure the board on a CLI. It took a while to figure out that it would be easier to create a large grid of "o's" and then
 use photoshop to overlay pieces. Moving them around until it looked right. The actual grouping of pixels and property assignment was more time consuming
 than complicated.
 - Updating the properties of the pieces and places took the most effort. Confusing index references with property rich objects got me snagged quite a few
