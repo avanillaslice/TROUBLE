@@ -30,8 +30,8 @@ pieces current position in relation to it's next one.
 - Determining the right gameplay priorities. And then implementing them in a way that didn't cause the player to move two pieces, or end up not attempting
 to move at all was another time sink. I ended up settling on multi-conditional if statements.
 - Developing general purpose movement functions. I really wanted to have a central function that would accept all movement intentions. Whether it be moving
-a piece out of the home area, across the board, sending them home if captured, and into the final area. I think it was an lack of foresight that made me
-code myself into a corner, where the time/effort cost of refactoring the existing code was greater than just making seperate functions for each.
+a piece out of the home area, across the board, sending them home if captured, or into the final area. I think it was aa lack of foresight that made me
+code myself into a corner, where the time/effort cost of refactoring the existing code was greater than making seperate functions for each.
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
